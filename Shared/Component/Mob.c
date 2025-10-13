@@ -97,6 +97,10 @@ void rr_component_mob_free(struct rr_component_mob *this,
                  health->squad_damage_counter[squad] <=
                      health->max_health * 0.2)
             continue;
+        else if (this->id == rr_mob_id_golden_meteor &&
+                 health->squad_damage_counter[squad] <=
+                     health->max_health * 0.2)
+            continue;
 
         for (uint8_t pos = 0; pos < RR_SQUAD_MEMBER_COUNT; ++pos)
         {
@@ -136,7 +140,7 @@ void rr_component_mob_free(struct rr_component_mob *this,
             float seed = rr_frand();
             float s2 = RR_MOB_DATA[this->id].loot[i].seed;
             uint8_t drop;
-            uint8_t cap = this->rarity >= rr_rarity_id_exotic ? this->rarity - 1
+            uint8_t cap = this->rarity >= rr_rarity_id_quantum ? this->rarity - 1
                                                               : this->rarity;
 
             for (drop = 0; drop <= cap + 1; ++drop)

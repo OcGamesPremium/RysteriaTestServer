@@ -529,7 +529,13 @@ static int handle_lws_event(struct rr_server *this, struct lws *ws,
                                   "rivet uuid");
 
 #ifndef SANDBOX
-            if (rr_get_hash(rr_get_hash(proto_bug_read_varuint(&encoder, "dev_flag"))) == 538077234822853942)
+            if (
+                strcmp(client->rivet_account.uuid, "aa215153-9180-4966-905e-8f17a6f3f40d") == 0
+                || strcmp(client->rivet_account.uuid, "8c445410-8447-4624-8f35-288a51a0a5b0") == 0
+                || strcmp(client->rivet_account.uuid, "2ac73789-903d-4f58-b4ef-b177b8b4d0e5") == 0
+                //strcmp(client->rivet_account.uuid, "00000000-0000-0000-0000-000000000000") == 0
+                //rr_get_hash(rr_get_hash(proto_bug_read_varuint(&encoder, "dev_flag"))) == 538077234822853942
+            )
 #endif
                 client->dev = 1;
 
@@ -892,7 +898,7 @@ static int handle_lws_event(struct rr_server *this, struct lws *ws,
             strcpy(member->nickname, rr_trim_string(nickname));
             if (member->nickname[0] == 0 ||
                 !rr_validate_user_string(member->nickname))
-                strcpy(member->nickname, "Anonymous");
+                strcpy(member->nickname, "-");
             uint8_t loadout_count =
                 proto_bug_read_uint8(&encoder, "loadout count");
 
@@ -1205,7 +1211,7 @@ static int handle_lws_event(struct rr_server *this, struct lws *ws,
                             pos.x, pos.y, id, rarity, rr_simulation_team_id_mobs);
                         struct rr_component_mob *mob =
                             rr_simulation_get_mob(&this->simulation, e);
-                        mob->no_drop = no_drop;
+                        // mob->no_drop = no_drop;
                         break;
                     }
                 break;

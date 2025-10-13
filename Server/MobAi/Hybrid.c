@@ -312,7 +312,7 @@ void tick_ai_pteranodon(EntityIdx entity, struct rr_simulation *simulation)
                 health, 5 * RR_MOB_RARITY_SCALING[mob->rarity].health);
             rr_component_health_set_health(health, health->max_health);
             health->damage = 10 * RR_MOB_RARITY_SCALING[mob->rarity].damage;
-            rr_simulation_get_petal(simulation, petal_id)->effect_delay = 50;
+            rr_simulation_get_petal(simulation, petal_id)->effect_delay = 1;
             struct rr_vector recoil;
             rr_vector_from_polar(&recoil, -5,
                                  physical->angle); // recoil

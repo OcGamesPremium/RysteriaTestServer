@@ -226,6 +226,11 @@ EntityIdx rr_simulation_alloc_mob(struct rr_simulation *this,
         physical->mass *= 25;
         team_id = rr_simulation_team_id_players;
     }
+    else if (mob_id == rr_mob_id_golden_meteor)
+    {
+        physical->mass *= 50;
+        team_id = rr_simulation_team_id_players;
+    }
     rr_component_relations_set_team(relations, team_id);
     rr_component_relations_update_root_owner(this, relations);
     ai->aggro_range = 800 * sqrtf(rarity_id + 1);

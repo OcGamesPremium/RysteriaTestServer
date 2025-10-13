@@ -14,7 +14,7 @@
 // You should have received a copy of the GNU Affero General Public License
 // along with this program.  If not, see <https://www.gnu.org/licenses/>.
 
-const rr_rarity_id_max = 7;
+const rr_rarity_id_max = 19;
 
 const canvas = document.createElement("canvas");
 const ctx = canvas.getContext('2d');

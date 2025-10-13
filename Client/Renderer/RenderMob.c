@@ -40,7 +40,7 @@ void rr_component_mob_render(EntityIdx entity, struct rr_game *game,
             rr_simulation_get_relations(simulation,
                                         game->player_info->flower_id)->team,
             rr_simulation_get_relations(simulation, entity)->team);
-    if ((mob->id == rr_mob_id_trex || mob->id == rr_mob_id_meteor) &&
+    if ((mob->id == rr_mob_id_trex || mob->id == rr_mob_id_meteor || mob->id == rr_mob_id_golden_meteor) &&
         is_friendly)
         rr_renderer_add_color_filter(renderer, 0xffffff63, 0.3);
     uint8_t has_arena = rr_simulation_has_arena(simulation, entity);
@@ -56,6 +56,27 @@ void rr_component_mob_render(EntityIdx entity, struct rr_game *game,
     rr_renderer_rotate(renderer, physical->lerp_angle);
     rr_renderer_scale(renderer, RR_MOB_RARITY_SCALING[mob->rarity].radius);
     if (mob->id == rr_mob_id_meteor)
+    {
+        struct rr_simulation_animation *particle =
+            rr_particle_alloc(&game->default_particle_manager,
+                              rr_animation_type_default);
+        float angle =
+            rr_vector_theta(&physical->lerp_velocity) + M_PI - 0.5 + rr_frand();
+        float dist = rr_frand() * 50;
+        rr_vector_from_polar(&particle->velocity,
+                             (rr_frand() * 5 + 5) *
+                                 RR_MOB_RARITY_SCALING[mob->rarity].radius,
+                             angle);
+        particle->friction = 0.9;
+        particle->x = physical->lerp_x + cosf(angle) * dist;
+        particle->y = physical->lerp_y + sinf(angle) * dist;
+        particle->size =
+            (4 + rr_frand() * 2) * RR_MOB_RARITY_SCALING[mob->rarity].radius;
+        particle->opacity = 0.8;
+        particle->disappearance = 6;
+        particle->color = 0xffab3423;
+    }
+    else if (mob->id == rr_mob_id_golden_meteor)
     {
         struct rr_simulation_animation *particle =
             rr_particle_alloc(&game->default_particle_manager,

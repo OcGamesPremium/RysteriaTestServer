@@ -650,9 +650,22 @@ static void petal_modifiers(struct rr_simulation *simulation,
                 heal = max_heal;
             health->gradually_healed += heal;
         }
+        if (data->id == rr_petal_id_blood_stinger)
+        {
+            float selfDamage = 0.075 * RR_PETAL_RARITY_SCALE[slot->rarity].self_damage;
+            rr_component_health_set_health(health, health->health - selfDamage);
+            health->health -= selfDamage;
+        }
         else if (data->id == rr_petal_id_berry)
         {
             to_rotate += (0.02 + 0.012 * slot->rarity);
+        }
+        else if (data->id == rr_petal_id_golden_leaf)
+        {
+            player_info->modifiers.reload_speed += 0.04 * (slot->rarity + 1);
+        }
+        else if (data->id == rr_petal_id_diamond_leaf)
+        {
             player_info->modifiers.reload_speed += 0.02 * (slot->rarity + 1);
         }
         else if (data->id == rr_petal_id_feather)
@@ -664,7 +677,7 @@ static void petal_modifiers(struct rr_simulation *simulation,
         else if (data->id == rr_petal_id_crest)
         {
             ++crest_count;
-            RR_SET_IF_LESS(player_info->camera_fov, 1 - 0.1 * slot->rarity)
+            RR_SET_IF_LESS(player_info->camera_fov, 1 - 0.05 * slot->rarity)
         }
         else if (data->id == rr_petal_id_droplet)
             ++rot_count;
@@ -701,6 +714,7 @@ static void petal_modifiers(struct rr_simulation *simulation,
     rr_component_flower_set_third_eye_count(flower, third_eye_count);
     player_info->global_rotation +=
         to_rotate * ((rot_count % 3) ? (rot_count % 3 == 2) ? 0 : -1 : 1);
+    
 }
 
 static void
@@ -722,6 +736,11 @@ system_egg_hatching_logic(struct rr_simulation *simulation,
     else if (petal->id == rr_petal_id_meteor)
     {
         m_id = rr_mob_id_meteor;
+        m_rar = petal->rarity >= 1 ? petal->rarity - 1 : 0;
+    }
+    else if (petal->id == rr_petal_id_golden_meteor)
+    {
+        m_id = rr_mob_id_golden_meteor;
         m_rar = petal->rarity >= 1 ? petal->rarity - 1 : 0;
     }
     struct rr_component_physical *physical =

@@ -26,7 +26,7 @@
 // head, body, legs, tail, IN THAT ORDER
 
 struct rr_renderer_spritesheet mob_sprites[rr_mob_id_max];
-struct rr_renderer_spritesheet friendly_mob_sprites[2];
+struct rr_renderer_spritesheet friendly_mob_sprites[3];
 void render_sprite(struct rr_renderer *renderer, uint8_t id, uint32_t pos,
                    uint8_t flags)
 {
@@ -39,6 +39,9 @@ void render_sprite(struct rr_renderer *renderer, uint8_t id, uint32_t pos,
                                          pos);
             else if (id == rr_mob_id_meteor)
                 render_sprite_from_cache(renderer, &friendly_mob_sprites[1],
+                                         pos);
+            else if (id == rr_mob_id_golden_meteor)
+                render_sprite_from_cache(renderer, &friendly_mob_sprites[2],
                                          pos);
             else
                 render_sprite_from_cache(renderer, &mob_sprites[id], pos);
@@ -112,6 +115,7 @@ void rr_renderer_draw_mob(struct rr_renderer *renderer, uint8_t id,
         rr_renderer_scale(renderer, 0.3f);
     case rr_mob_id_tree:
     case rr_mob_id_meteor:
+    case rr_mob_id_golden_meteor:
     case rr_mob_id_beehive:
         rr_renderer_scale(renderer, 0.4f);
         render_sprite(renderer, id, 0, flags);
@@ -360,8 +364,70 @@ void rr_renderer_draw_mob(struct rr_renderer *renderer, uint8_t id,
             render_sprite(renderer, id, 2, flags);
             rr_renderer_context_state_free(renderer, &state);
             render_sprite(renderer, id, 1, flags);
-        }
         break;
+            case rr_mob_id_lanternfly:
+            rr_renderer_scale(renderer, 0.2);
+            
+            rr_renderer_context_state_init(renderer, &state);
+            rr_renderer_rotate(renderer, animation_tick * 900.1f - M_PI / 6);
+            rr_renderer_translate(renderer, 0, 75);
+            rr_renderer_scale2(renderer, -1, 1);
+            rr_renderer_rotate(renderer, M_PI / 20);
+            render_sprite(renderer, id, 2, flags);
+            rr_renderer_context_state_free(renderer, &state);
+            rr_renderer_context_state_init(renderer, &state);
+            rr_renderer_rotate(renderer, animation_tick * -900.1f);
+            rr_renderer_translate(renderer, 0, 75);
+            rr_renderer_scale2(renderer, -1, 1);
+            rr_renderer_rotate(renderer, M_PI / 20);
+            render_sprite(renderer, id, 2, flags);
+            rr_renderer_context_state_free(renderer, &state);
+            rr_renderer_context_state_init(renderer, &state);
+            rr_renderer_rotate(renderer, animation_tick * 900.1f + M_PI / 6);
+            rr_renderer_translate(renderer, 0, 75);
+            rr_renderer_scale2(renderer, -1, 1);
+            rr_renderer_rotate(renderer, M_PI / 20);
+            render_sprite(renderer, id, 2, flags);
+            rr_renderer_context_state_free(renderer, &state);
+
+            rr_renderer_context_state_init(renderer, &state);
+            rr_renderer_rotate(renderer, animation_tick * 900.1f - M_PI / 6 + M_PI);
+            rr_renderer_translate(renderer, 0, 75);
+            rr_renderer_rotate(renderer, M_PI / 20);
+            render_sprite(renderer, id, 2, flags);
+            rr_renderer_context_state_free(renderer, &state);
+            rr_renderer_context_state_init(renderer, &state);
+            rr_renderer_rotate(renderer, animation_tick * -900.1f + M_PI);
+            rr_renderer_translate(renderer, 0, 75);
+            rr_renderer_rotate(renderer, M_PI / 20);
+            render_sprite(renderer, id, 2, flags);
+            rr_renderer_context_state_free(renderer, &state);
+            rr_renderer_context_state_init(renderer, &state);
+            rr_renderer_rotate(renderer, animation_tick * 900.1f + M_PI / 6 + M_PI);
+            rr_renderer_translate(renderer, 0, 75);
+            rr_renderer_rotate(renderer, M_PI / 20);
+            render_sprite(renderer, id, 2, flags);
+            rr_renderer_context_state_free(renderer, &state);
+            
+            rr_renderer_translate(renderer, -90, 0);
+            //render_sprite(renderer, id, 2, flags);
+            //rr_renderer_translate(renderer, 90, 0);
+            render_sprite(renderer, id, 1, flags);
+            rr_renderer_context_state_init(renderer, &state);
+            rr_renderer_rotate(renderer, animation_tick * 900.2f);
+            rr_renderer_translate(renderer, 0, 20);
+            render_sprite(renderer, id, 3, flags);
+            rr_renderer_context_state_free(renderer, &state);
+            rr_renderer_context_state_init(renderer, &state);
+            rr_renderer_scale2(renderer, 1, -1);
+            rr_renderer_rotate(renderer, animation_tick * -900.2f);
+            rr_renderer_translate(renderer, 0, 20);
+            render_sprite(renderer, id, 3, flags);
+            rr_renderer_context_state_free(renderer, &state);
+            rr_renderer_translate(renderer, 150, 0);
+            render_sprite(renderer, id, 0, flags);
+            break;
+        }    
     }
 
     rr_renderer_context_state_free(renderer, &original_state);
@@ -466,8 +532,19 @@ void rr_renderer_mob_cache_init()
         &mob_sprites[17], NULL, 240, 240, rr_spider_head_draw, 240, 240,
         rr_spider_abdomen_draw, 240, 240, rr_spider_leg_draw, 0);
 
-    rr_renderer_spritesheet_init(&mob_sprites[18], NULL, 240, 240,
+   rr_renderer_spritesheet_init(&mob_sprites[18], NULL, 240, 240,
                                  rr_house_centipede_head_draw, 240, 240,
                                  rr_house_centipede_body_draw, 240, 240,
                                  rr_house_centipede_leg_draw, 0);
+
+    rr_renderer_spritesheet_init(
+        &mob_sprites[19], NULL, 240, 240, rr_quetzalcoatlus_head_draw, 240, 240,
+        rr_lanternfly_abdomen_draw, 240, 240, rr_lanternfly_leg_draw, 240, 240,
+        rr_lanternfly_wing1_draw, 0);
+
+    rr_renderer_spritesheet_init(&mob_sprites[20], NULL, 240, 144,
+                                 rr_meteor_draw, 0);
+
+    rr_renderer_spritesheet_init(&friendly_mob_sprites[2], friendly_mask,
+                                 240, 144, rr_meteor_draw, 0);
 }
